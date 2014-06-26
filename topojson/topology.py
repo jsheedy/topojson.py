@@ -69,7 +69,7 @@ def topology (objects, stitchPoles=True,quantization=1e4,id_key='id',property_tr
     finde=findEmax(objects)
     emax = finde.emax
     clock = Clock(system.ring_area)
-    objects = clock.clock(objects)
+    clock.clock(objects)
     class find_coincidences(Types):
         def line(self,line):
             for point in line:
