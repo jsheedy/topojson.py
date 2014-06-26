@@ -13,11 +13,11 @@ def property_transform (outprop, key, inprop):
         return True
 def topology (objects, stitchPoles=True,quantization=1e4,id_key='id',property_transform=property_transform,system = False,simplify=False):
     ln = Line(quantization)
-    id_func = lambda x:x[id_key]
+    id_func = lambda x:x.get(id_key)
     if simplify:
         objects = simplify_object(objects,simplify)
     [x0,x1,y0,y1]=bound(objects)
-    
+
     oversize = x0 < -180 - E or x1 > 180 + E or y0 < -90 - E or y1 > 90 + E
     if not system:
         if oversize:
@@ -51,7 +51,7 @@ def topology (objects, stitchPoles=True,quantization=1e4,id_key='id',property_tr
     if not quantization:
         quantization = x1 + 1
         x0 = y0 = 0
-        
+
     class findEmax(Types):
         def __init__(self,obj):
             self.emax=0
@@ -68,7 +68,8 @@ def topology (objects, stitchPoles=True,quantization=1e4,id_key='id',property_tr
             point[1] = int(y)
     finde=findEmax(objects)
     emax = finde.emax
-    clock(objects,system.ring_area)
+    clock = Clock(system.ring_area)
+    objects = clock.clock(objects)
     class find_coincidences(Types):
         def line(self,line):
             for point in line:
